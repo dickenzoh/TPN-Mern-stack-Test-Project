@@ -7,11 +7,13 @@ import PageTwo from "./Pages/PageTwo/PageTwo";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import AdminPage from "./Pages/AdminPage/AdminPage";
 import Auth from "./Pages/Auth/Auth";
+import Navbar from "./Components/Navbar/Navbar";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Container maxWidth="xl">
+        <Navbar />
         <Routes>
           <Route path="/" exact element={<PageOne />} />
           <Route path="/auth" exact element={<Auth />} />
