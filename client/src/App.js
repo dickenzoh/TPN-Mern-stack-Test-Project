@@ -6,6 +6,7 @@ import PageOne from "./Pages/PageOne/PageOne";
 import PageTwo from "./Pages/PageTwo/PageTwo";
 import ProfilePage from "./Pages/ProfilePage/ProfilePage";
 import AdminPage from "./Pages/AdminPage/AdminPage";
+import Auth from "./Pages/Auth/Auth";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <Container maxWidth="xl">
         <Routes>
           <Route path="/" exact element={<PageOne />} />
+          <Route path="/auth" exact element={<Auth />} />
           <Route path="/pagedual" exact element={<PageDual />} />
           <Route path="/pagetwo" exact element={<PageTwo />} />
           <Route path="/admin" exact element={<AdminPage />} />
