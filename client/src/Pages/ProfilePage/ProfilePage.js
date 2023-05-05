@@ -56,7 +56,7 @@ const ProfilePage = () => {
     <Container component="main" maxWidth="xs">
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Edit Profile
+          Edit Profile.
         </Typography>
         <IconButton onClick={handleImageUpload} sx={{ p: 0 }}>
           <Avatar alt="Dickens Kinoti" src="/static/images/avatar/2.jpg" />
