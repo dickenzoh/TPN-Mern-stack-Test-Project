@@ -8,9 +8,12 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { Alert } from "@mui/material";
 import useStyles from "./styles";
 import Input from "./Input";
-import Icon from "./icon";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { signIn, signUp } from "../../actions/auth";
 
 const initialState = {
   firstName: "",
@@ -25,7 +28,11 @@ const Auth = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState(initialState);
   const [emailForReset, setEmailForReset] = useState("");
+  const [error, setError] = useState("");
   const classes = useStyles();
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -39,9 +46,18 @@ const Auth = () => {
     setShowPassword(false);
   };
 
-  const handleSubmit = () => {
-    console.log("User logged in");
-    console.log(formData);
+  const handleSubmit = async (e) => {
+    setError("");
+    e.preventDefault();
+    if (isSignup) {
+      if (formData.password !== formData.confirmPassword) {
+        return setError("Passwords do not match");
+      }
+      dispatch(signUp(formData));
+      switchMode();
+    } else {
+      dispatch(signIn(formData, navigate));
+    }
   };
 
   const handleResetPassword = () => {
@@ -60,6 +76,16 @@ const Auth = () => {
           <Grid container spacing={2}>
             {isSignup && (
               <>
+                {error && (
+                  <Alert
+                    onClose={() => {
+                      setError("");
+                    }}
+                    severity="warning"
+                  >
+                    {error}
+                  </Alert>
+                )}
                 <Input
                   name="firstName"
                   label="First Name"
