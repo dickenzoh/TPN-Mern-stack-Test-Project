@@ -20,6 +20,7 @@ app.use("/", (req, res) => {
 
 const PORT = process.env.PORT || 3008;
 
+mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.CONN_URL, {
     useNewUrlParser: true,

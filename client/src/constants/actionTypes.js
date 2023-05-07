@@ -5,3 +5,5 @@ export const END_LOADING = "END_LOADING";
 //Auth
 export const AUTH = "AUTH";
 export const LOGOUT = "LOGOUT";
+
+export const FETCH_USERS = "FETCH_USERS";
