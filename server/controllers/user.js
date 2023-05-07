@@ -1,20 +1,19 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import mongoose from "mongoose";
 import User from "../models/user.js";
 
 export const signIn = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const existingUser = await User.findOne({ email });
     if (!existingUser) {
       return res.status(404).json({ message: "User doesn't exist." });
-      const isPasswordCorrect = await bcrypt.compare(
-        password,
-        existingUser.password
-      );
     }
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
     if (!isPasswordCorrect) {
       return res.status(400).json({ message: "Invalid crendential" });
     }
@@ -65,4 +64,23 @@ export const getUsers = async (req, res) => {
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
+};
+
+// Update user role
+export const updateUserRole = async (req, res) => {
+  const { id: _id } = req.params;
+  const user = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(_id))
+    return res.status(404).send("No user with that id");
+
+  const updatedUser = await User.findByIdAndUpdate(
+    _id,
+    { ...user, _id },
+    {
+      new: true,
+    }
+  );
+
+  res.json(updatedUser);
 };

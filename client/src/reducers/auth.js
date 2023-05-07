@@ -1,4 +1,9 @@
-import { AUTH, FETCH_USERS, LOGOUT } from "../constants/actionTypes";
+import {
+  AUTH,
+  FETCH_USERS,
+  LOGOUT,
+  UPDATE_USER,
+} from "../constants/actionTypes";
 
 const authReducer = (state = { authData: null }, action) => {
   switch (action.type) {
@@ -12,6 +17,15 @@ const authReducer = (state = { authData: null }, action) => {
       return { ...state, authData: null };
     case FETCH_USERS:
       return { ...state, users: action.payload };
+    case UPDATE_USER:
+      return {
+        ...state,
+        auth:
+          state.auth &&
+          state.auth.map((user) =>
+            user._id === action.payload._id ? action.payload : user
+          ),
+      };
     default:
       return state;
   }

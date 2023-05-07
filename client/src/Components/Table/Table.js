@@ -15,15 +15,19 @@ import { Box } from "@mui/system";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./style.css";
+import { updateUserRole } from "../../actions/auth";
+import { useDispatch } from "react-redux";
 
-const UserList = ({ users }) => {
+const UserList = ({ users, setUserData }) => {
   console.log(users);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSetAdmin = (user) => {
-    user.role = "admin";
     console.log(user);
+    const newRole = user.role === "admin" ? "user" : "admin";
+    dispatch(updateUserRole(user._id, { ...users, role: newRole }));
   };
 
   return (
@@ -68,6 +72,11 @@ const UserList = ({ users }) => {
               </TableCell>
               <TableCell>
                 <Typography sx={{ color: "#000", fontWeight: 500 }}>
+                  Role
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography sx={{ color: "#000", fontWeight: 500 }}>
                   Action
                 </Typography>
               </TableCell>
@@ -86,15 +95,27 @@ const UserList = ({ users }) => {
                 <TableCell>{user.firstName}</TableCell>
                 <TableCell>{user.lastName}</TableCell>
                 <TableCell>{user.email}</TableCell>
+                <TableCell>{user.role}</TableCell>
                 <TableCell>
-                  <Button
-                    onClick={() => handleSetAdmin(user)}
-                    variant="contained"
-                    color="primary"
-                    borderRadius="4px"
-                  >
-                    Set Admin
-                  </Button>
+                  {user.role === "user" ? (
+                    <Button
+                      onClick={() => handleSetAdmin(user)}
+                      variant="contained"
+                      style={{ backgroundColor: "#12824C", color: "#FFFFFF" }}
+                      borderRadius="4px"
+                    >
+                      Set Admin
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleSetAdmin(user)}
+                      variant="contained"
+                      style={{ backgroundColor: "#ff1717", color: "#FFFFFF" }}
+                      borderRadius="4px"
+                    >
+                      Revoke
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
