@@ -1,4 +1,9 @@
-import { AUTH, FETCH_USERS, UPDATE_USER } from "../constants/actionTypes";
+import {
+  AUTH,
+  FETCH_USERS,
+  UPDATE_USER,
+  UPDATE_USER_DETAILS,
+} from "../constants/actionTypes";
 import * as api from "../api/index.js";
 
 export const signIn = (formData, navigate) => async (dispatch) => {
@@ -40,6 +45,15 @@ export const updateUserRole = (userId, user) => async (dispatch) => {
   try {
     const { data } = await api.updateUserRole(userId, user);
     dispatch({ type: UPDATE_USER, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updatedUserDetails = (userId, user) => async (dispatch) => {
+  try {
+    const { data } = await api.updateUserDetails(userId, user);
+    dispatch({ type: UPDATE_USER_DETAILS, payload: data });
   } catch (error) {
     console.log(error);
   }

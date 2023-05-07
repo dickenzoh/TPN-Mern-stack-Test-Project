@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Avatar, Button, Container, Typography } from "@material-ui/core";
-import { Grid, IconButton } from "@mui/material";
+import { Box, Grid, IconButton } from "@mui/material";
+import FileBase from "react-file-base64";
 import Input from "../Auth/Input";
+import { updatedUserDetails } from "../../actions/auth";
+import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(5),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
@@ -26,12 +29,19 @@ const useStyles = makeStyles((theme) => ({
 
 const ProfilePage = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const [editMode, setEditMode] = useState(false);
+
+  const profileData = JSON.parse(localStorage.getItem("profile"));
+  console.log(profileData._id);
 
   const [formData, setFormData] = useState({
-    name: "John Doe",
-    email: "johndoe@example.com",
+    firstName: profileData.result.firstName,
+    lastName: profileData.result.lastName,
+    email: profileData.result.email,
     password: "",
     confirmPassword: "",
+    selectedFile: "",
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -41,8 +51,9 @@ const ProfilePage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Submit form data to API or backend
     console.log(formData);
+    dispatch(updatedUserDetails(profileData._id, formData));
+    switchMode();
   };
 
   const handleImageUpload = () => {
@@ -52,31 +63,35 @@ const ProfilePage = () => {
   const handleShowPassword = () =>
     setShowPassword((prevShowPass) => !prevShowPass);
 
+  const switchMode = () => {
+    setEditMode((prevIsSignup) => !prevIsSignup);
+  };
+
   return (
     <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Edit Profile.
-        </Typography>
-        <IconButton onClick={handleImageUpload} sx={{ p: 0 }}>
-          <Avatar alt="Dickens Kinoti" src="/static/images/avatar/2.jpg" />
-        </IconButton>
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
-            <>
-              <Input
-                name="firstName"
-                label="First Name"
-                handleChange={handleChange}
-                autoFocus
-                half
-              />
-              <Input
-                name="lastName"
-                label="Last Name"
-                handleChange={handleChange}
-                half
-              />
+      {editMode ? (
+        <div className={classes.paper}>
+          <Typography component="h1" variant="h5">
+            Edit Profile.
+          </Typography>
+
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <>
+                <Input
+                  name="firstName"
+                  label="First Name"
+                  handleChange={handleChange}
+                  autoFocus
+                  half
+                />
+                <Input
+                  name="lastName"
+                  label="Last Name"
+                  handleChange={handleChange}
+                  half
+                />
+              </>
               <Input
                 name="email"
                 label="Email Address"
@@ -97,20 +112,71 @@ const ProfilePage = () => {
                 type={showPassword ? "text" : "password"}
                 handleShowPassword={handleShowPassword}
               />
-            </>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              style={{ backgroundColor: "#E1B00A", color: "#FFFFFF" }}
+              className={classes.submit}
+            >
+              Save Changes
+            </Button>
+            <Grid container justifyContent="flex-end"></Grid>
+          </form>
+        </div>
+      ) : (
+        <div className={classes.paper}>
+          <Typography component="h1" variant="h4" align="center" gutterBottom>
+            {profileData.result.firstName} {profileData.result.lastName}
+          </Typography>
+          <Box sx={{ mb: 5, mt: 5 }}>
+            <Avatar
+              alt={profileData.result.firstName}
+              src="/static/images/avatar/2.jpg"
+              sx={{ width: 150, height: 150 }}
+            />
+          </Box>
+          <Grid container spacing={2} justifyContent="center">
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Typography component="h2" variant="h6" fontWeight="bold">
+                  Email:
+                </Typography>
+                <Typography sx={{ marginLeft: "10px" }}>
+                  {profileData.result.email}
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Typography component="h2" variant="h6" fontWeight="bold">
+                  First Name:
+                </Typography>
+                <Typography sx={{ marginLeft: "10px" }}>
+                  {profileData.result.firstName}
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Typography component="h2" variant="h6" fontWeight="bold">
+                  Last Name:
+                </Typography>
+                <Typography sx={{ marginLeft: "10px" }}>
+                  {profileData.result.lastName}
+                </Typography>
+              </Box>
+            </Box>
           </Grid>
-
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            color="primary"
+            style={{ backgroundColor: "#E1B00A", color: "#FFFFFF" }}
             className={classes.submit}
+            onClick={switchMode}
           >
-            Save Changes
+            Edit Profile
           </Button>
-        </form>
-      </div>
+        </div>
+      )}
     </Container>
   );
 };

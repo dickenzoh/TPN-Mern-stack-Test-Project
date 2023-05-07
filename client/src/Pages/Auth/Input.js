@@ -11,6 +11,7 @@ const Input = ({
   autoFocus,
   type,
   handleShowPassword,
+  value,
 }) => {
   const [text, onChangeText] = React.useState("Useless Text");
   const [number, onChangeNumber] = React.useState("");
@@ -26,6 +27,7 @@ const Input = ({
         label={label}
         autoFocus={autoFocus}
         type={type}
+        value={value}
         InputProps={
           name === "password"
             ? {

@@ -4,6 +4,7 @@ import {
   signUp,
   getUsers,
   updateUserRole,
+  updateUserDetails,
 } from "../controllers/user.js";
 
 const router = express.Router();
@@ -13,6 +14,6 @@ router.post("/signup", signUp);
 
 router.get("/", getUsers);
 router.patch("/:id", updateUserRole);
-router.patch("/users/:id/updateRole", updateUserRole);
+router.patch("/:id", updateUserDetails);
 
 export default router;

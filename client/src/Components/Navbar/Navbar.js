@@ -60,6 +60,8 @@ function Navbar() {
     },
   });
 
+  const profileData = JSON.parse(localStorage.getItem("profile"));
+
   return (
     <ThemeProvider theme={darkTheme}>
       <AppBar position="static" style={{ width: "100%" }}>
@@ -125,11 +127,12 @@ function Navbar() {
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar
-                    alt="Dickens Kinoti"
+                    alt={profileData.result.firstName}
                     src="/static/images/avatar/2.jpg"
                   />
                 </IconButton>
               </Tooltip>
+
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"

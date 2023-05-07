@@ -8,3 +8,6 @@ export const signUp = (formData) => API.post("users/signup", formData);
 export const getUsers = () => API.get("/users");
 export const updateUserRole = (id, updatedUser) =>
   API.patch(`/users/${id}`, updatedUser);
+
+export const updateUserDetails = (id, updatedUserDetails) =>
+  API.patch(`/users/${id}`, updatedUserDetails);
