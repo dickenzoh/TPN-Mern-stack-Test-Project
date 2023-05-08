@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import TPNlogo from "../../images/TPN-logo.png";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const pages = ["Page 1", "Page 2", "Dual Page", "Admin Page"];
 const settings = ["Profile", "Logout"];
@@ -23,6 +24,7 @@ function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -39,13 +41,17 @@ function Navbar() {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    dispatch({ type: "LOGOUT" });
+    navigate("/auth");
+  };
+
   const handleSettings = (settings) => {
-    console.log(settings);
     if (settings === "Profile") {
       navigate("/profile");
     }
     if (settings === "Logout") {
-      navigate("/auth");
+      handleLogout();
     }
 
     handleCloseUserMenu();

@@ -6,14 +6,18 @@ import {
   Paper,
   Typography,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { GoogleLogin } from "react-google-login";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { gapi } from "gapi-script";
 import { Alert } from "@mui/material";
+import Icon from "./icon";
 import useStyles from "./styles";
 import Input from "./Input";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signIn, signUp } from "../../actions/auth";
+import { AUTH } from "../../constants/actionTypes";
 
 const initialState = {
   firstName: "",
@@ -64,6 +68,36 @@ const Auth = () => {
     // Code to handle resetting password
     console.log("Resetting password for", emailForReset);
   };
+
+  const googleSuccess = async (res) => {
+    console.log(res);
+    const result = res?.profileObj;
+    const token = res?.tokenId;
+
+    try {
+      dispatch({ type: AUTH, data: { result, token } });
+
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const googleFailure = (error) => {
+    console.log(error);
+    console.log("failed");
+  };
+
+  useEffect(() => {
+    function start() {
+      gapi.auth2.getAuthInstance({
+        clientId: process.env.GOOGLE_LOGIN_ID,
+        scope: "email",
+      });
+    }
+
+    gapi.load("client:auth2", start);
+  }, []);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -133,6 +167,25 @@ const Auth = () => {
           >
             {isSignup ? "Sign Up" : "Sign In"}
           </Button>
+          <GoogleLogin
+            clientId={process.env.GOOGLE_LOGIN_ID}
+            render={(renderProps) => (
+              <Button
+                color="primary"
+                fullWidth
+                onClick={renderProps.onClick}
+                disabled={renderProps.disabled}
+                startIcon={<Icon />}
+                variant="contained"
+                className={classes.googleButton}
+              >
+                {isSignup ? "Google Sign Up" : "Google Sign In"}
+              </Button>
+            )}
+            onSuccess={googleSuccess}
+            onFailure={googleFailure}
+            cookiePolicy="single_host_origin"
+          />
           {!isSignup && (
             <Grid item xs={12}>
               <Button
