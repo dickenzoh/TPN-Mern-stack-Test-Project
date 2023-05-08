@@ -6,14 +6,15 @@ import {
   updateUserRole,
   updateUserDetails,
 } from "../controllers/user.js";
+import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.post("/signin", signIn);
 router.post("/signup", signUp);
 
-router.get("/", getUsers);
-router.patch("/:id", updateUserRole);
-router.patch("/:id", updateUserDetails);
+router.get("/", auth, getUsers);
+router.patch("/:id", auth, updateUserRole);
+router.patch("/:id", auth, updateUserDetails);
 
 export default router;
